@@ -34,7 +34,12 @@ const config: HardhatUserConfig = {
     }
   },
   networks: {
-    hardhat: {},
+    hardhat: {
+      mining: {
+        auto: true,
+        interval: 200
+      }
+    },
     localhost: {},
     rinkeby: {
       url: `https://rinkeby.infura.io/v3/${process.env.INFURA_API_KEY}`,
