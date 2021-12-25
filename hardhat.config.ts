@@ -8,7 +8,6 @@ import "@typechain/hardhat";
 import "@nomiclabs/hardhat-etherscan";
 import "solidity-coverage";
 import "hardhat-deploy";
-import "hardhat-packager";
 import "hardhat-gas-reporter";
 
 dotenv.config();
@@ -62,10 +61,6 @@ const config: HardhatUserConfig = {
   },
   typechain: {
     outDir: "src/types"
-  },
-  packager: {
-    contracts: ["HofaNFT", "ERC721"],
-    includeFactories: true,
   },
 };
 
