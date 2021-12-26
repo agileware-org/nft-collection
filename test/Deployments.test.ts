@@ -2,10 +2,9 @@
 /* eslint-disable node/no-missing-import */
 /* eslint-disable camelcase */
 import "@nomiclabs/hardhat-ethers";
-import { Contract } from "ethers";
 
 import { ethers, upgrades, deployments } from "hardhat";
-import { ExpandableCollectionFactory, ExpandableCollectionFactory__factory, ExpandableCollection, ExpandableCollection__factory } from "../src/types";
+import { ExpandableCollectionFactory, ExpandableCollectionFactory__factory, ExpandableCollection__factory } from "../src/types";
 
 describe("Deployments", function () {
   let beaconAddress:string|undefined;

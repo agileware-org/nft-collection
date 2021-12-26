@@ -42,20 +42,19 @@ contract ExpandableCollectionFactory is AccessControl {
         _grantRole(ARTIST_ROLE, _msgSender());
     }
 
-    function upgrade(address implementation) onlyRole(DEFAULT_ADMIN_ROLE) public {
+    function upgrade(address implementation) public onlyRole(DEFAULT_ADMIN_ROLE) {
         beacon.upgradeTo(implementation);
     }
 
     /**
-     * Creates a new collection contract as a factory with a deterministic address, returning the address of the newly created contract.
-     * Important: None of these fields can be changed after calling this operation, with the sole exception of the baseUrl field which
-     * must refer to a content having the same hash.
+     * Creates a new collection contract as a factory, returning the address of the newly created contract.
+     * Important: None of these fields can be changed after calling this operation, with the sole exception of the size and baseUrl fields.
      * 
      * @param info collection immutable information
      * @param size number of NFTs composing this collection
      * @param baseUrl url to be prepended to token URIs
      * @param royalties perpetual royalties paid to the creator upon token selling
-     * @return the address of the editions contract created
+     * @return the address of the collection contract created
      */
     function create(
         ExpandableCollection.Info memory info,
@@ -76,29 +75,30 @@ contract ExpandableCollectionFactory is AccessControl {
     }
 
     /**
-     * Gets an editions contract given the unique identifier. Contract ids are zero-based.
+     * Gets a collection contract given the unique identifier.
      * 
-     * @param name FIXME zero-based index of editions contract to retrieve
+     * @param name the unique identifier of the collection contract to retrieve
      * @return the editions contract
      */
     function byName(string memory name) external view returns (ExpandableCollection) {
+        require(_names[name] != address(0x0), "Collection doesn't exist");
         return ExpandableCollection(_names[name]);
     }
 
     /** 
-     * @return the number of edition contracts created so far through this factory
+     * @return the number of collection contracts created so far through this factory
      */
      function instances() external view returns (uint256) {
         return _counter.current();
     }
 
     /**
-     * Emitted when an edition is created reserving the corresponding token IDs.
+     * Emitted when a collection is created reserving the corresponding token IDs.
      * 
-     * @param index the identifier of the newly created editions contract
-     * @param creator the editions' owner
-     * @param size the number of tokens this editions contract consists of
-     * @param contractAddress the address of the contract representing the editions
+     * @param index the identifier of the newly created collection contract
+     * @param creator the collection's owner
+     * @param size the number of tokens this collection contract consists of
+     * @param contractAddress the address of the contract representing the collection
      */
     event CreatedCollection(uint256 indexed index, address indexed creator, string baseUrl, uint256 size, address contractAddress);
 }
