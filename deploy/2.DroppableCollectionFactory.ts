@@ -8,13 +8,13 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { deploy, get } = deployments;
   const { deployer } = await getNamedAccounts();
 
-  const template = await get("ExpandableCollection");
-  await deploy("ExpandableCollectionFactory", {
+  const template = await get("DroppableCollection");
+  await deploy("DroppableCollectionFactory", {
     from: deployer,
     args: [template.address],
     log: true
   });
 };
 export default func;
-func.dependencies = ["ExpandableCollection"];
+func.dependencies = ["DroppableCollection"];
 func.tags = ["collection"];

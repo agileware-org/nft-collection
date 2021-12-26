@@ -17,8 +17,8 @@ async function verify(contract:string, args: any[]) {
 }
 
 async function main() {
-  await verify("ExpandableCollection", []);
-  await verify("ExpandableCollectionFactory", [(await get("ExpandableCollection")).address]);
+  await verify("DroppableCollection", []);
+  await verify("DroppableCollectionFactory", [(await get("DroppableCollection")).address]);
 }
 
 main()

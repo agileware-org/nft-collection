@@ -17,7 +17,7 @@ import {AddressUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/Addr
 /**
  * This contract represents a collection of NFTs.
  */
-contract ExpandableCollection2 is ERC721Upgradeable, IERC2981Upgradeable, OwnableUpgradeable {
+contract DroppableCollection is ERC721Upgradeable, IERC2981Upgradeable, OwnableUpgradeable {
     
     event ItemsAdded(uint256 amount);
 
@@ -78,7 +78,7 @@ contract ExpandableCollection2 is ERC721Upgradeable, IERC2981Upgradeable, Ownabl
      * Returns the number of tokens minted so far 
      */
      function totalSupply() public view returns (uint256) {
-        return size * 2;
+        return size;
     }
 
     function drop(string memory _baseUrl, uint64 _size) external onlyOwner returns (uint256) {

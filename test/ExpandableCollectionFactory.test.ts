@@ -1,17 +1,17 @@
 /* eslint-disable no-unused-expressions */
 import "@nomiclabs/hardhat-ethers";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { ExpandableCollectionFactory, ExpandableCollection, ExpandableCollection__factory, ExpandableCollection2 } from "../src/types";
+import { DroppableCollectionFactory, DroppableCollection, DroppableCollection__factory, DroppableCollectionV2 } from "../src/types";
 
 const { expect } = require("chai");
 const { ethers, deployments, upgrades } = require("hardhat");
 
-describe("ExpandableCollectionFactory", function () {
+describe("DroppableCollectionFactory", function () {
   let deployer: SignerWithAddress;
   let artist: SignerWithAddress;
   let shareholder: SignerWithAddress;
   let other: SignerWithAddress;
-  let factory: ExpandableCollectionFactory;
+  let factory: DroppableCollectionFactory;
 
   const info = {
     name: "Roberto Lo Giacco",
@@ -20,9 +20,9 @@ describe("ExpandableCollectionFactory", function () {
   };
 
   beforeEach(async () => {
-    const { ExpandableCollectionFactory } = await deployments.fixture(["collection"]);
+    const { DroppableCollectionFactory } = await deployments.fixture(["collection"]);
     [deployer, artist, shareholder, other] = await ethers.getSigners();
-    factory = (await ethers.getContractAt("ExpandableCollectionFactory", ExpandableCollectionFactory.address)) as ExpandableCollectionFactory;
+    factory = (await ethers.getContractAt("DroppableCollectionFactory", DroppableCollectionFactory.address)) as DroppableCollectionFactory;
     await factory.grantRole(await factory.ARTIST_ROLE(), artist.address);
   });
 
@@ -43,16 +43,16 @@ describe("ExpandableCollectionFactory", function () {
         contractAddress = e.args!.contractAddress;
       }
     }
-    const instance = (await ethers.getContractAt("ExpandableCollection", contractAddress!)) as ExpandableCollection;
+    const instance = (await ethers.getContractAt("DroppableCollection", contractAddress!)) as DroppableCollection;
     const beaconAddress = (await factory.beacon());
     expect(await instance.totalSupply()).to.be.equal(1000);
     console.log(await factory.hasRole(await factory.DEFAULT_ADMIN_ROLE(), deployer.address));
 
-    const Template2 = await ethers.getContractFactory("ExpandableCollection2");
+    const Template2 = await ethers.getContractFactory("DroppableCollectionV2");
     console.log("pippo");
     await factory.connect(deployer).upgrade((await Template2.deploy()).address);
     console.log("pluto");
-    const instance2 = (await ethers.getContractAt("ExpandableCollection2", contractAddress!)) as ExpandableCollection2;
+    const instance2 = (await ethers.getContractAt("DroppableCollectionV2", contractAddress!)) as DroppableCollectionV2;
     console.log(await instance2.totalSupply());
     expect(await instance2.totalSupply()).to.be.equal(2000);
   });
@@ -72,7 +72,7 @@ describe("ExpandableCollectionFactory", function () {
 
     expect(await factory.instances()).to.be.equal(1);
     expect(await factory.byName("Roberto")).to.be.properAddress;
-    const instance = (await ethers.getContractAt("ExpandableCollection", await factory.byName("Roberto"))) as ExpandableCollection;
+    const instance = (await ethers.getContractAt("DroppableCollection", await factory.byName("Roberto"))) as DroppableCollection;
     expect(await instance.owner()).to.be.equal(artist.address);
   });
 });

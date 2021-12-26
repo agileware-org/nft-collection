@@ -4,30 +4,30 @@
 /* eslint-disable camelcase */
 import "@nomiclabs/hardhat-ethers";
 import { ethers, upgrades, deployments } from "hardhat";
-import { ExpandableCollectionFactory, ExpandableCollectionFactory__factory, ExpandableCollection__factory } from "../src/types";
+import { DroppableCollectionFactory, DroppableCollectionFactory__factory, DroppableCollection__factory } from "../src/types";
 
 const { expect } = require("chai");
 
 describe("Deployments", function () {
   let beaconAddress:string|undefined;
 
-  it("Should deploy ExpandableCollectionFactory", async function () {
-    const Template = await ethers.getContractFactory("ExpandableCollection");
+  it("Should deploy DroppableCollectionFactory", async function () {
+    const Template = await ethers.getContractFactory("DroppableCollection");
     const template = await Template.deploy();
     expect(template.address).to.be.properAddress;
 
-    const Factory = await ethers.getContractFactory("ExpandableCollectionFactory");
+    const Factory = await ethers.getContractFactory("DroppableCollectionFactory");
     const factory = await Factory.deploy(template.address);
     expect(factory.address).to.be.properAddress;
   });
 
-  it("Should upgrade ExpandableCollection", async function () {
-    const Template = await ethers.getContractFactory("ExpandableCollection");
+  it("Should upgrade DroppableCollection", async function () {
+    const Template = await ethers.getContractFactory("DroppableCollection");
     const template = await Template.deploy();
     expect(template.address).to.be.properAddress;
 
-    const Factory = await ethers.getContractFactory("ExpandableCollectionFactory");
-    const factory = await Factory.deploy(template.address) as ExpandableCollectionFactory;
+    const Factory = await ethers.getContractFactory("DroppableCollectionFactory");
+    const factory = await Factory.deploy(template.address) as DroppableCollectionFactory;
     expect(factory.address).to.be.properAddress;
 
     const [deployer] = await ethers.getSigners();
@@ -39,7 +39,7 @@ describe("Deployments", function () {
     console.log("pippo");
     const events = (await tx.wait()).events!;
     console.log(tx);
-    const instance = ExpandableCollection__factory.connect(events[0]!.args!.contractAddress, deployer);
+    const instance = DroppableCollection__factory.connect(events[0]!.args!.contractAddress, deployer);
     console.log(instance.address);
     console.log(await instance.connect(deployer).totalSupply());
     console.log(await instance.totalSupply());

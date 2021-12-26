@@ -14,9 +14,9 @@ import {AccessControl} from "@openzeppelin/contracts/access/AccessControl.sol";
 import {BeaconProxy} from "@openzeppelin/contracts/proxy/beacon/BeaconProxy.sol";
 import {UpgradeableBeacon} from "@openzeppelin/contracts/proxy/beacon/UpgradeableBeacon.sol";
 
-import "./ExpandableCollection.sol";
+import "./DroppableCollection.sol";
 
-contract ExpandableCollectionFactory is AccessControl {
+contract DroppableCollectionFactory is AccessControl {
     bytes32 public constant ARTIST_ROLE = keccak256("ARTIST_ROLE");
     using Counters for Counters.Counter;
 
@@ -57,7 +57,7 @@ contract ExpandableCollectionFactory is AccessControl {
      * @return the address of the collection contract created
      */
     function create(
-        ExpandableCollection.Info memory info,
+        DroppableCollection.Info memory info,
         uint64 size,
         string memory baseUrl,
         uint16 royalties
@@ -66,7 +66,7 @@ contract ExpandableCollectionFactory is AccessControl {
         uint256 id = _counter.current();
         BeaconProxy proxy = new BeaconProxy(
             address(beacon), 
-            abi.encodeWithSelector(ExpandableCollection(address(0x0)).initialize.selector, _msgSender(), info, size, baseUrl, royalties)
+            abi.encodeWithSelector(DroppableCollection(address(0x0)).initialize.selector, _msgSender(), info, size, baseUrl, royalties)
         );
         _names[info.name] = address(proxy);
         emit CreatedCollection(id, msg.sender, baseUrl, size, address(proxy));
@@ -80,9 +80,9 @@ contract ExpandableCollectionFactory is AccessControl {
      * @param name the unique identifier of the collection contract to retrieve
      * @return the editions contract
      */
-    function byName(string memory name) external view returns (ExpandableCollection) {
+    function byName(string memory name) external view returns (DroppableCollection) {
         require(_names[name] != address(0x0), "Collection doesn't exist");
-        return ExpandableCollection(_names[name]);
+        return DroppableCollection(_names[name]);
     }
 
     /** 
