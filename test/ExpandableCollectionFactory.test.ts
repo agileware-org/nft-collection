@@ -26,7 +26,7 @@ describe("DroppableCollectionFactory", function () {
     await factory.grantRole(await factory.ARTIST_ROLE(), artist.address);
   });
 
-  it.only("Should allow upgrading", async function () {
+  it("Should allow upgrading", async function () {
     const tx = await factory.connect(artist).create(
       {
         name: "Roberto",
