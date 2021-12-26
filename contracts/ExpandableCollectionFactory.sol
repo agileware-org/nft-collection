@@ -11,6 +11,8 @@ pragma solidity ^0.8.6;
 import {Clones} from "@openzeppelin/contracts/proxy/Clones.sol";
 import {Counters} from "@openzeppelin/contracts/utils/Counters.sol";
 import {AccessControl} from "@openzeppelin/contracts/access/AccessControl.sol";
+import {BeaconProxy} from "@openzeppelin/contracts/proxy/beacon/BeaconProxy.sol";
+import {UpgradeableBeacon} from "@openzeppelin/contracts/proxy/beacon/UpgradeableBeacon.sol";
 
 import "./ExpandableCollection.sol";
 
@@ -22,20 +24,26 @@ contract ExpandableCollectionFactory is AccessControl {
     Counters.Counter internal _counter;
 
     // Address for implementation contract to clone
-    address private _implementation;
+    UpgradeableBeacon public immutable beacon;
 
     // Store for name to id mappings
-    mapping(string => uint256) private _names;
-
+    mapping(string => address) private _names;
+    
     /**
      * Initializes the factory with the address of the implementation contract template
      * 
-     * @param implementation Edition implementation contract to clone
+     * @param implementation implementation contract to clone
      */
     constructor(address implementation) {
-        _implementation = implementation;
-        _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
-        _grantRole(ARTIST_ROLE, msg.sender);
+        UpgradeableBeacon _tokenBeacon = new UpgradeableBeacon(implementation);
+        _tokenBeacon.transferOwnership(_msgSender());
+        beacon = _tokenBeacon;
+        _grantRole(DEFAULT_ADMIN_ROLE, _msgSender());
+        _grantRole(ARTIST_ROLE, _msgSender());
+    }
+
+    function upgrade(address implementation) onlyRole(DEFAULT_ADMIN_ROLE) public {
+        beacon.upgradeTo(implementation);
     }
 
     /**
@@ -55,28 +63,26 @@ contract ExpandableCollectionFactory is AccessControl {
         string memory baseUrl,
         uint16 royalties
     ) external onlyRole(ARTIST_ROLE) returns (address) {
-        require(_names[info.name] == 0, "Duplicated collection");
+        require(_names[info.name] == address(0x0), "Duplicated collection");
         uint256 id = _counter.current();
-        _names[info.name] = id;
-        address instance = Clones.cloneDeterministic(_implementation, bytes32(abi.encodePacked(id)));
-        ExpandableCollection(instance).initialize(msg.sender, info, size, baseUrl, royalties);
-        emit CreatedCollection(id, msg.sender, baseUrl, size, instance);
+        BeaconProxy proxy = new BeaconProxy(
+            address(beacon), 
+            abi.encodeWithSelector(ExpandableCollection(address(0x0)).initialize.selector, _msgSender(), info, size, baseUrl, royalties)
+        );
+        _names[info.name] = address(proxy);
+        emit CreatedCollection(id, msg.sender, baseUrl, size, address(proxy));
         _counter.increment();
-        return instance;
+        return address(proxy);
     }
 
     /**
      * Gets an editions contract given the unique identifier. Contract ids are zero-based.
      * 
-     * @param index zero-based index of editions contract to retrieve
+     * @param name FIXME zero-based index of editions contract to retrieve
      * @return the editions contract
      */
-    function get(uint256 index) external view returns (ExpandableCollection) {
-        return ExpandableCollection(Clones.predictDeterministicAddress(_implementation, bytes32(abi.encodePacked(index)), address(this)));
-    }
-
     function get(string memory name) external view returns (ExpandableCollection) {
-        return ExpandableCollection(Clones.predictDeterministicAddress(_implementation, bytes32(abi.encodePacked(_names[name])), address(this)));
+        return ExpandableCollection(_names[name]);
     }
 
     /** 

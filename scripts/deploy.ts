@@ -1,4 +1,5 @@
 /* eslint-disable no-process-exit */
+// eslint-disable-next-line node/no-unpublished-import
 import { deployments, getChainId } from "hardhat";
 import { readFileSync, writeFileSync } from "fs";
 import { ethers } from "ethers";
