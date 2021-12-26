@@ -44,17 +44,10 @@ describe("DroppableCollectionFactory", function () {
       }
     }
     const instance = (await ethers.getContractAt("DroppableCollection", contractAddress!)) as DroppableCollection;
-    const beaconAddress = (await factory.beacon());
     expect(await instance.totalSupply()).to.be.equal(1000);
-    console.log(await factory.hasRole(await factory.DEFAULT_ADMIN_ROLE(), deployer.address));
 
-    const Template2 = await ethers.getContractFactory("DroppableCollectionV2");
-    console.log("pippo");
-    await factory.connect(deployer).upgrade((await Template2.deploy()).address);
-    console.log("pluto");
-    const instance2 = (await ethers.getContractAt("DroppableCollectionV2", contractAddress!)) as DroppableCollectionV2;
-    console.log(await instance2.totalSupply());
-    expect(await instance2.totalSupply()).to.be.equal(2000);
+    await factory.connect(deployer).upgrade((await (await ethers.getContractFactory("DroppableCollectionV2")).deploy()).address);
+    expect(await instance.totalSupply()).to.be.equal(2000);
   });
 
   it("Should emit a CreatedCollection event upon create", async function () {
