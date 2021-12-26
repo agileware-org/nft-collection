@@ -90,10 +90,10 @@ contract DroppableCollection is ERC721Upgradeable, IERC2981Upgradeable, OwnableU
         return _mint(_size);
     }
 
-    function _mint(uint64 _size) internal onlyOwner returns (uint256) {
+    function _mint(uint64 _size) internal returns (uint256) {
         require(_size > size, "Not extended");
         for (uint64 tokenId = size + 1; tokenId <= _size; tokenId++) {
-            _safeMint(msg.sender, tokenId, "");
+            _safeMint(owner(), tokenId, "");
         }
         size = _size;
         return size;

@@ -55,7 +55,7 @@ contract DroppableCollectionFactory is AccessControl {
         string memory baseUrl,
         uint16 royalties
     ) external onlyRole(ARTIST_ROLE) returns (address) {
-        require(_names[info.name] != 0, "Duplicated collection");
+        require(_names[info.name] == 0, "Duplicated collection");
         uint256 id = _counter.current();
         _names[info.name] = id;
         address instance = Clones.cloneDeterministic(_implementation, bytes32(abi.encodePacked(id)));
@@ -75,7 +75,7 @@ contract DroppableCollectionFactory is AccessControl {
         return DroppableCollection(Clones.predictDeterministicAddress(_implementation, bytes32(abi.encodePacked(index)), address(this)));
     }
 
-    function get(string memory name) external view returns (DroppableCollection) {
+    function byName(string memory name) external view returns (DroppableCollection) {
         return DroppableCollection(Clones.predictDeterministicAddress(_implementation, bytes32(abi.encodePacked(_names[name])), address(this)));
     }
 
