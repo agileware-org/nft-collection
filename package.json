@@ -1,6 +1,9 @@
 {
   "name": "@kreation.tech/nft-collection",
   "version": "0.1.0",
+  "engines": {
+    "node": ">=10.0.0"
+  },
   "description": "NFT Collection Contracts",
   "author": "Roberto Lo Giacco",
   "license": "MIT",
@@ -34,6 +37,7 @@
     "@nomiclabs/hardhat-waffle": "^2.0.1",
     "@openzeppelin/contracts": "^4.4.1",
     "@openzeppelin/contracts-upgradeable": "^4.4.1",
+    "@openzeppelin/hardhat-upgrades": "^1.12.0",
     "@typechain/ethers-v5": "^7.2.0",
     "@typechain/hardhat": "^2.3.1",
     "@types/chai": "^4.3.0",

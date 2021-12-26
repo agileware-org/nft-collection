@@ -55,7 +55,7 @@ contract ExpandableCollectionFactory is AccessControl {
         string memory baseUrl,
         uint16 royalties
     ) external onlyRole(ARTIST_ROLE) returns (address) {
-        require(_names[info.name] != 0, "Duplicated collection");
+        require(_names[info.name] == 0, "Duplicated collection");
         uint256 id = _counter.current();
         _names[info.name] = id;
         address instance = Clones.cloneDeterministic(_implementation, bytes32(abi.encodePacked(id)));

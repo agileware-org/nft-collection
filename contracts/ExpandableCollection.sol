@@ -21,8 +21,6 @@ import {AddressUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/Addr
  */
 contract ExpandableCollection is ERC721Upgradeable, IERC2981Upgradeable, OwnableUpgradeable {
     
-    using CountersUpgradeable for CountersUpgradeable.Counter;
-    
     event ItemsAdded(uint256 amount);
 
     struct Info {
@@ -45,9 +43,9 @@ contract ExpandableCollection is ERC721Upgradeable, IERC2981Upgradeable, Ownable
     
     // royalties ERC2981 in bps
     uint16 public royalties;
-
-    constructor() initializer { }
-
+    
+    /// @custom:oz-upgrades-unsafe-allow constructor
+    constructor() initializer {}
     /**
      * Creates a new edition and sets the only allowed minter to the address that creates/owns the edition: this can be re-assigned or updated later.
      * 
