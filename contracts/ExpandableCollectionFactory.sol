@@ -36,7 +36,7 @@ contract ExpandableCollectionFactory is AccessControl {
      */
     constructor(address implementation) {
         UpgradeableBeacon _tokenBeacon = new UpgradeableBeacon(implementation);
-        _tokenBeacon.transferOwnership(_msgSender());
+        //_tokenBeacon.transferOwnership(_msgSender());
         beacon = _tokenBeacon;
         _grantRole(DEFAULT_ADMIN_ROLE, _msgSender());
         _grantRole(ARTIST_ROLE, _msgSender());

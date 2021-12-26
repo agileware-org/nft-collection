@@ -15,13 +15,9 @@ import {CountersUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/Cou
 import {AddressUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/AddressUpgradeable.sol";
 
 /**
- * This contract allows dynamic NFT minting.
- * 
- * Operations allow for selling publicly, partial or total giveaways, direct giveaways and rewardings.
+ * This contract represents a collection of NFTs.
  */
 contract ExpandableCollection2 is ERC721Upgradeable, IERC2981Upgradeable, OwnableUpgradeable {
-    
-    using CountersUpgradeable for CountersUpgradeable.Counter;
     
     event ItemsAdded(uint256 amount);
 
@@ -45,13 +41,14 @@ contract ExpandableCollection2 is ERC721Upgradeable, IERC2981Upgradeable, Ownabl
     
     // royalties ERC2981 in bps
     uint16 public royalties;
-
-    constructor() initializer { }
+    
+    /// @custom:oz-upgrades-unsafe-allow constructor
+    constructor() initializer {}
 
     /**
-     * Creates a new edition and sets the only allowed minter to the address that creates/owns the edition: this can be re-assigned or updated later.
+     * Creates a new collection and sets the owner.
      * 
-     * @param _owner can authorize, mint, gets royalties and a dividend of sales, can update the content URL.
+     * @param _owner can drop new tokens.
      * @param _info token properties
      * @param _size number of NFTs that can be minted from this contract: set to 0 for unbound
      * @param _baseUrl sad
@@ -66,10 +63,9 @@ contract ExpandableCollection2 is ERC721Upgradeable, IERC2981Upgradeable, Ownabl
     ) public initializer {
         __ERC721_init(_info.name, _info.symbol);
         __Ownable_init();
-
         transferOwnership(_owner); // set ownership
         description = _info.description;
-        require(bytes(_baseUrl).length > 0, "Empty nase URL");
+        require(bytes(_baseUrl).length > 0, "Empty base URL");
         baseUrl = _baseUrl;
         if (_size > 0) {
             _mint(_size);
@@ -90,15 +86,10 @@ contract ExpandableCollection2 is ERC721Upgradeable, IERC2981Upgradeable, Ownabl
         return _mint(_size);
     }
 
-    function dropSingle(string memory _baseUrl) external onlyOwner returns (uint256) {
-        baseUrl = _baseUrl;
-        return _mint(size = 1);
-    }
-
-    function _mint(uint64 _size) internal onlyOwner returns (uint256) {
+    function _mint(uint64 _size) internal returns (uint256) {
         require(_size > size, "Not extended");
         for (uint64 tokenId = size + 1; tokenId <= _size; tokenId++) {
-            _safeMint(msg.sender, tokenId, "");
+            _safeMint(owner(), tokenId, "");
         }
         size = _size;
         return size;
