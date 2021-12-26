@@ -81,7 +81,7 @@ contract ExpandableCollectionFactory is AccessControl {
      * @param name FIXME zero-based index of editions contract to retrieve
      * @return the editions contract
      */
-    function get(string memory name) external view returns (ExpandableCollection) {
+    function byName(string memory name) external view returns (ExpandableCollection) {
         return ExpandableCollection(_names[name]);
     }
 
