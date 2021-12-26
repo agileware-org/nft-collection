@@ -8,7 +8,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { deploy } = deployments;
   const { deployer } = await getNamedAccounts();
 
-  await deploy("ExpandableCollection", {
+  await deploy("DroppableCollection", {
     from: deployer,
     log: true
   });

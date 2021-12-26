@@ -19,7 +19,7 @@ import {AddressUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/Addr
  * 
  * Operations allow for selling publicly, partial or total giveaways, direct giveaways and rewardings.
  */
-contract ExpandableCollection is ERC721Upgradeable, IERC2981Upgradeable, OwnableUpgradeable {
+contract DroppableCollection is ERC721Upgradeable, IERC2981Upgradeable, OwnableUpgradeable {
     
     using CountersUpgradeable for CountersUpgradeable.Counter;
     

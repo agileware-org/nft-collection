@@ -16,8 +16,8 @@ async function main() {
   const addresses = JSON.parse(readFileSync("./src/addresses.json", "utf-8"));
   addresses[await getChainId()] = contracts;
 
-  await addressOf("ExpandableCollection");
-  await addressOf("ExpandableCollectionFactory");
+  await addressOf("DroppableCollection");
+  await addressOf("DroppableCollectionFactory");
   writeFileSync("./src/addresses.json", JSON.stringify(addresses, null, 2), { encoding: "utf-8" });
 
   roles.admin = ethers.constants.HashZero;

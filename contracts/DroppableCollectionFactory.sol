@@ -12,9 +12,9 @@ import {Clones} from "@openzeppelin/contracts/proxy/Clones.sol";
 import {Counters} from "@openzeppelin/contracts/utils/Counters.sol";
 import {AccessControl} from "@openzeppelin/contracts/access/AccessControl.sol";
 
-import "./ExpandableCollection.sol";
+import "./DroppableCollection.sol";
 
-contract ExpandableCollectionFactory is AccessControl {
+contract DroppableCollectionFactory is AccessControl {
     bytes32 public constant ARTIST_ROLE = keccak256("ARTIST_ROLE");
     using Counters for Counters.Counter;
 
@@ -50,7 +50,7 @@ contract ExpandableCollectionFactory is AccessControl {
      * @return the address of the editions contract created
      */
     function create(
-        ExpandableCollection.Info memory info,
+        DroppableCollection.Info memory info,
         uint64 size,
         string memory baseUrl,
         uint16 royalties
@@ -59,7 +59,7 @@ contract ExpandableCollectionFactory is AccessControl {
         uint256 id = _counter.current();
         _names[info.name] = id;
         address instance = Clones.cloneDeterministic(_implementation, bytes32(abi.encodePacked(id)));
-        ExpandableCollection(instance).initialize(msg.sender, info, size, baseUrl, royalties);
+        DroppableCollection(instance).initialize(msg.sender, info, size, baseUrl, royalties);
         emit CreatedCollection(id, msg.sender, baseUrl, size, instance);
         _counter.increment();
         return instance;
@@ -71,12 +71,12 @@ contract ExpandableCollectionFactory is AccessControl {
      * @param index zero-based index of editions contract to retrieve
      * @return the editions contract
      */
-    function get(uint256 index) external view returns (ExpandableCollection) {
-        return ExpandableCollection(Clones.predictDeterministicAddress(_implementation, bytes32(abi.encodePacked(index)), address(this)));
+    function get(uint256 index) external view returns (DroppableCollection) {
+        return DroppableCollection(Clones.predictDeterministicAddress(_implementation, bytes32(abi.encodePacked(index)), address(this)));
     }
 
-    function get(string memory name) external view returns (ExpandableCollection) {
-        return ExpandableCollection(Clones.predictDeterministicAddress(_implementation, bytes32(abi.encodePacked(_names[name])), address(this)));
+    function get(string memory name) external view returns (DroppableCollection) {
+        return DroppableCollection(Clones.predictDeterministicAddress(_implementation, bytes32(abi.encodePacked(_names[name])), address(this)));
     }
 
     /** 
