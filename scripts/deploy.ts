@@ -1,3 +1,4 @@
+/* eslint-disable node/no-unpublished-import */
 /* eslint-disable no-process-exit */
 // eslint-disable-next-line node/no-unpublished-import
 import { deployments, getChainId } from "hardhat";

@@ -46,10 +46,10 @@ contract DroppableCollection is ERC721Upgradeable, IERC2981Upgradeable, OwnableU
     constructor() initializer {}
 
     /**
-     * Creates a new collection and sets the owner.
+     * Creates a new collection and builds all the available NFTS setting their owner to the address that creates the edition: this can be re-assigned or updated later.
      * 
-     * @param _owner can drop new tokens.
-     * @param _info token properties
+     * @param _owner can drop more tokens, gets royalties and can update the base URL.
+     * @param _info collection properties
      * @param _size number of NFTs that can be minted from this contract: set to 0 for unbound
      * @param _baseUrl sad
      * @param _royalties perpetual royalties paid to the creator upon token selling
