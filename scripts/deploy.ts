@@ -1,3 +1,4 @@
+/* eslint-disable node/no-unpublished-import */
 /* eslint-disable no-process-exit */
 import { deployments, getChainId } from "hardhat";
 import { readFileSync, writeFileSync } from "fs";

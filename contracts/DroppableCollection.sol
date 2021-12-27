@@ -49,10 +49,10 @@ contract DroppableCollection is ERC721Upgradeable, IERC2981Upgradeable, OwnableU
     constructor() initializer { }
 
     /**
-     * Creates a new edition and sets the only allowed minter to the address that creates/owns the edition: this can be re-assigned or updated later.
+     * Creates a new collection and builds all the available NFTS setting their owner to the address that creates the edition: this can be re-assigned or updated later.
      * 
-     * @param _owner can authorize, mint, gets royalties and a dividend of sales, can update the content URL.
-     * @param _info token properties
+     * @param _owner can drop more tokens, gets royalties and can update the base URL.
+     * @param _info collection properties
      * @param _size number of NFTs that can be minted from this contract: set to 0 for unbound
      * @param _baseUrl sad
      * @param _royalties perpetual royalties paid to the creator upon token selling
@@ -69,7 +69,7 @@ contract DroppableCollection is ERC721Upgradeable, IERC2981Upgradeable, OwnableU
 
         transferOwnership(_owner); // set ownership
         description = _info.description;
-        require(bytes(_baseUrl).length > 0, "Empty nase URL");
+        require(bytes(_baseUrl).length > 0, "Empty base URL");
         baseUrl = _baseUrl;
         if (_size > 0) {
             _mint(_size);
