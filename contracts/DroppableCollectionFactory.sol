@@ -35,9 +35,10 @@ contract DroppableCollectionFactory is AccessControl {
      * @param implementation implementation contract to clone
      */
     constructor(address implementation) {
-        UpgradeableBeacon _tokenBeacon = new UpgradeableBeacon(implementation);
+        //UpgradeableBeacon _tokenBeacon = new UpgradeableBeacon(implementation);
         //_tokenBeacon.transferOwnership(_msgSender());
-        beacon = _tokenBeacon;
+        //beacon = _tokenBeacon;
+        beacon = UpgradeableBeacon(implementation);
         _grantRole(DEFAULT_ADMIN_ROLE, _msgSender());
         _grantRole(ARTIST_ROLE, _msgSender());
     }
