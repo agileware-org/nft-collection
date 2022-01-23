@@ -33,7 +33,7 @@ describe("DroppableCollectionFactory", function () {
         symbol: "RLG",
         description: "**Me**, _myself_ and I. A gentle reminder to take care of our inner child, avoiding to take ourselves too seriously, no matter the circumstances: we are just _'a blade of grass'_. See [my website](http://www.agileware.org)",
       },
-      1000,
+      500,
       "https://ipfs.io/ipfs/bafybeib52yyp5jm2vwifd65mv3fdmno6dazwzyotdklpyq2sv6g2ajlgxu",
       250);
 
@@ -44,10 +44,10 @@ describe("DroppableCollectionFactory", function () {
       }
     }
     const instance = (await ethers.getContractAt("DroppableCollection", contractAddress!)) as DroppableCollection;
-    expect(await instance.totalSupply()).to.be.equal(1000);
+    expect(await instance.totalSupply()).to.be.equal(500);
 
     await factory.connect(deployer).upgrade((await (await ethers.getContractFactory("DroppableCollectionV2")).deploy()).address);
-    expect(await instance.totalSupply()).to.be.equal(2000);
+    expect(await instance.totalSupply()).to.be.equal(1000);
   });
 
   it("Should emit a CreatedCollection event upon create", async function () {
@@ -57,7 +57,7 @@ describe("DroppableCollectionFactory", function () {
         symbol: "RLG",
         description: "**Me**, _myself_ and I. A gentle reminder to take care of our inner child, avoiding to take ourselves too seriously, no matter the circumstances: we are just _'a blade of grass'_. See [my website](http://www.agileware.org)",
       },
-      1000,
+      500,
       "https://ipfs.io/ipfs/bafybeib52yyp5jm2vwifd65mv3fdmno6dazwzyotdklpyq2sv6g2ajlgxu",
       250))
 
